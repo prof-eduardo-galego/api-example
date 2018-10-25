@@ -1,9 +1,7 @@
 #!groovy
 pipeline {
 
-//    agent {
-//        label 'slave1'
-//    }
+    agent any
 
     tools {
         maven 'Maven'
@@ -103,5 +101,5 @@ pipeline {
         failure {
         }
     }
-    
+
 }
