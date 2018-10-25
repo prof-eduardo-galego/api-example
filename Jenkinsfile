@@ -19,12 +19,12 @@ pipeline {
         }
 
         stage('Analyse') {
-//            steps {
-//                echo 'Submetendo código-fonte para análise estática'
+            steps {
+                echo 'Submetendo código-fonte para análise estática'
 //                withSonarQubeEnv('sonar.leroymerlin.com.br') {
 //                    sh 'mvn sonar:sonar'
 //                }
-//            }
+            }
         }
 
         stage("Result of analysis"){
@@ -62,7 +62,6 @@ pipeline {
 //              cd ../calendar_deploy-dev
 //              eb deploy lmbr-calendar-dev
 //            """
-                }
             }
         }
 
@@ -104,4 +103,5 @@ pipeline {
         failure {
         }
     }
+    
 }
