@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class    SampleService {
+public class SampleService {
 
     private static List<Sample> REPOSITORY = new ArrayList<>();
     static {
