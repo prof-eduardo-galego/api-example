@@ -63,7 +63,7 @@ pipeline {
                 withAWS(credentials: 'elasticbeanstalk_app') {
                     sh """
                         cd ~/
-                        eb deploy api-example-dev
+                        /home/ec2-user/.local/bin/eb deploy api-example-dev
                     """
                 }
             }
@@ -84,7 +84,7 @@ pipeline {
                 withAWS(credentials: 'elasticbeanstalk_app') {
                     sh """
                         cd ~/
-                        eb deploy api-example-prod
+                        /home/ec2-user/.local/bin/eb deploy api-example-prod
                     """
                 }
             }
