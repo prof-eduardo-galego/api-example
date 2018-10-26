@@ -9,10 +9,10 @@ pipeline {
     }
 
     stages {
-        stage('Build') {
+        stage('Cleanup') {
             steps {
-                echo 'Executando construção do projeto'
-                sh 'mvn clean install'
+                echo 'Efetuando limpeza'
+                sh 'mvn clean'
             }
         }
 
@@ -34,32 +34,38 @@ pipeline {
 //            }
 //        }
 
+        stage('Unit Test') {
+            steps {
+                echo 'Executando testes unitários'
+//                sh 'mvn test'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Executando construção do projeto'
+                sh 'mvn install'
+            }
+        }
+
         stage('Deploy to Develop') {
             when {
                 branch 'developer'
             }
             steps {
                 echo 'Preparing workspace to dev'
-//                sh """
-//            rm -rf ../calendar_deploy-dev
-//            mkdir ../calendar_deploy-dev
-//            mkdir ../calendar_deploy-dev/target
-//            cp -r Dockerfile ../calendar_deploy-dev/Dockerfile
-//            cp -r target/*.war ../calendar_deploy-dev/target/lm-schedule.war
-//            cp -r .ebextensions ../calendar_deploy-dev/.ebextensions
-//            cp -r .configuration/context.xml ../calendar_deploy-dev/target/context.xml
-//            cp -r .elasticbeanstalk ../calendar_deploy-dev/.elasticbeanstalk
-//            cp -r .configuration/newrelic/ ../calendar_deploy-dev/newrelic
-//            cp -r .configuration/certs/ ../calendar_deploy-dev/certs
-//          """
-//                echo '##################################'
-//                echo 'Deploying to dev environment'
-//                echo '##################################'
-//                withAWS(credentials: 'svc_elasticbeanstalk_app') {
-//                    sh """
-//              cd ../calendar_deploy-dev
-//              eb deploy lmbr-calendar-dev
-//            """
+                sh """
+                    rm -rf ../deploy-dev
+                    mkdir ../deploy-dev
+                    cp -r target/api-example-0.0.1-SNAPSHOT.jar.jar ../deploy-dev/target/api-example.jar
+                """
+                echo 'Deploying to dev environment'
+                withAWS(credentials: 'elasticbeanstalk_app') {
+                    sh """
+                        cd ../deploy-dev
+                        eb deploy api-example-dev
+                    """
+                }
             }
         }
 
@@ -69,37 +75,19 @@ pipeline {
             }
             steps {
                 echo 'Preparing workspace to prod'
-//                sh """
-//                rm -rf ../calendar_deploy-prd
-//                mkdir ../calendar_deploy-prd
-//                mkdir ../calendar_deploy-prd/target
-//                cp -r Dockerfile ../calendar_deploy-prd/Dockerfile
-//                cp -r target/*.war ../calendar_deploy-prd/target/lm-schedule.war
-//                cp -r .ebextensions ../calendar_deploy-prd/.ebextensions
-//                cp -r .configuration/context.xml ../calendar_deploy-prd/target/context.xml
-//                cp -r .elasticbeanstalk ../calendar_deploy-prd/.elasticbeanstalk
-//                cp -r .configuration/newrelic/ ../calendar_deploy-prd/newrelic
-//                cp -r .configuration/certs/ ../calendar_deploy-prd/certs
-//              """
-//                echo '##################################'
-//                echo 'Deploying to dev environment'
-//                echo '##################################'
-//                withAWS(credentials: 'svc_elasticbeanstalk_app') {
-//                    sh """
-//                  cd ../calendar_deploy-prd
-//                  eb deploy lmbr-calendar-prd
-//                """
-//                }
+                sh """
+                    rm -rf ../deploy-prod
+                    mkdir ../deploy-prod
+                    cp -r target/api-example-0.0.1-SNAPSHOT.jar.jar ../deploy-prod/target/api-example.jar
+                """
+                echo 'Deploying to prod environment'
+                withAWS(credentials: 'elasticbeanstalk_app') {
+                    sh """
+                        cd ../deploy-prod
+                        eb deploy api-example-prod
+                    """
+                }
             }
         }
     }
-
-//    post {
-//        success {
-//        }
-//
-//        failure {
-//        }
-//    }
-
 }
