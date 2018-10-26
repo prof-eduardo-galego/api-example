@@ -55,14 +55,14 @@ pipeline {
             steps {
                 echo 'Preparing workspace to dev'
                 sh """
-                    rm -rf ../deploy-dev
-                    mkdir ../deploy-dev
-                    cp -r target/api-example-0.0.1-SNAPSHOT.jar ../deploy-dev/target/api-example.jar
+                    rm -rf ~/target
+                    mkdir ~/target
+                    cp -r target/api-example-0.0.1-SNAPSHOT.jar ~/target/api-example.jar
                 """
                 echo 'Deploying to dev environment'
                 withAWS(credentials: 'elasticbeanstalk_app') {
                     sh """
-                        cd ../deploy-dev
+                        cd ~/
                         eb deploy api-example-dev
                     """
                 }
@@ -76,14 +76,14 @@ pipeline {
             steps {
                 echo 'Preparing workspace to prod'
                 sh """
-                    rm -rf ../deploy-prod
-                    mkdir ../deploy-prod
-                    cp -r target/api-example-0.0.1-SNAPSHOT.jar ../deploy-prod/target/api-example.jar
+                    rm -rf ~/target
+                    mkdir ~/target
+                    cp -r target/api-example-0.0.1-SNAPSHOT.jar ~/target/api-example.jar
                 """
                 echo 'Deploying to prod environment'
                 withAWS(credentials: 'elasticbeanstalk_app') {
                     sh """
-                        cd ../deploy-prod
+                        cd ~/
                         eb deploy api-example-prod
                     """
                 }
